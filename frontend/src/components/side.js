@@ -1,7 +1,7 @@
-import Component from '/src/core/component.js';
-import SideStore from '/src/store/sideStore.js';
+import Component from '../core/component.js';
+import SideStore from '../store/sideStore.js';
 
-import { sideTabList } from '/src/constants/sideTabList.js';
+import { sideTabList } from '../constants/sideTabList.js';
 
 class Header extends Component {
   template() {

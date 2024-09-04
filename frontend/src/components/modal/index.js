@@ -1,10 +1,10 @@
-import Component from '/src/core/component.js';
-import Alarm from '/src/components/modal/alarm.js';
-import Detail from '/src/components/modal/Detail.js';
-import Post from '/src/components/modal/post.js';
-import Write from '/src/components/modal/write.js';
+import Component from '../../core/component.js';
+import Alarm from './alarm.js';
+import Detail from './Detail.js';
+import Post from './post.js';
+import Write from './write.js';
 
-import SideStore from '/src/store/sideStore.js';
+import SideStore from '../../store/sideStore.js';
 
 class Modal extends Component {
   setup() {

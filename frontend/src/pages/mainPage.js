@@ -1,12 +1,12 @@
-import Component from '/src/core/component.js';
-import Header from '/src/components/header.js';
-import Content from '/src/components/content.js';
-import Side from '/src/components/side.js';
-import Modal from '/src/components/modal/index.js';
+import Component from '../core/component.js';
+import Header from '../components/header.js';
+import Content from '../components/content.js';
+import Side from '../components/side.js';
+import Modal from '../components/modal/index.js';
 
-import SideStore from '/src/store/sideStore.js';
+import SideStore from '../store/sideStore.js';
 
-import { $ } from '/src/utils/selector.js';
+import { $ } from '../utils/selector.js';
 
 class MainPage extends Component {
   setup() {

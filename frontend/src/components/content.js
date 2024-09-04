@@ -1,8 +1,8 @@
-import Component from '/src/core/component.js';
-import ContentStore from '/src/store/contentStore.js';
-import SideStore from '/src/store/sideStore.js';
+import Component from '../core/component.js';
+import ContentStore from '../store/contentStore.js';
+import SideStore from '../store/sideStore.js';
 
-import { getTimeDifference } from '/src/utils/getTimeDifference.js';
+import { getTimeDifference } from '../utils/getTimeDifference.js';
 
 class Contents extends Component {
   setup() {

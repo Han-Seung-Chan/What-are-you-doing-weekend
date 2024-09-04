@@ -1,6 +1,6 @@
-import Component from '/src/core/component.js';
-import ContentStore from '/src/store/contentStore.js';
-import SideStore from '/src/store/sideStore.js';
+import Component from '../../core/component.js';
+import ContentStore from '../../store/contentStore.js';
+import SideStore from '../../store/sideStore.js';
 
 class Detail extends Component {
   setup() {

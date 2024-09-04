@@ -1,8 +1,8 @@
-import Component from '/src/core/component.js';
+import Component from '../../core/component.js';
 
 import SideStore from '../../store/sideStore.js';
 
-import { $ } from '/src/utils/selector.js';
+import { $ } from '../../utils/selector.js';
 
 class Write extends Component {
   setup() {

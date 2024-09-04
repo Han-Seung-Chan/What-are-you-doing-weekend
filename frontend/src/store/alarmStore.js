@@ -1,6 +1,6 @@
-import Store from '/src/core/store.js';
+import Store from '../core/store.js';
 
-import { alarmList } from '/src/constants/mock/alarm.js';
+import { alarmList } from '../constants/mock/alarm.js';
 
 class AlarmStore extends Store {
   #alarm = 'alarm';

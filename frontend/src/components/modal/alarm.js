@@ -1,8 +1,8 @@
-import Component from '/src/core/component.js';
-import AlarmStore from '/src/store/alarmStore.js';
-import SideStore from '/src/store/sideStore.js';
+import Component from '../../core/component.js';
+import AlarmStore from '../../store/alarmStore.js';
+import SideStore from '../../store/sideStore.js';
 
-import { getTimeDifference } from '/src/utils/getTimeDifference.js';
+import { getTimeDifference } from '../../utils/getTimeDifference.js';
 
 class Alarm extends Component {
   setup() {

@@ -1,4 +1,4 @@
-import Store from '/src/core/store.js';
+import Store from '../core/store.js';
 
 class HeaderStore extends Store {
   #searchWord = 'searchWord';
