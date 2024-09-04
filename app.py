@@ -74,10 +74,16 @@ def login():
     else :
         return jsonify({"result" : "failure"})
 
+# log-out
+@app.route("/logout", methods = ["POST"])
+def logout():
+    print("임시")
+
 # 회원가입 페이지 출력
 @app.route("/sign-up-page")
 def sign_up_page():
-    return render_template("sign_up.html")    
+    return render_template("sign_up.html")  
+  
 # ID-check
 @app.route("/id-check", methods=["GET"])
 def id_check():
@@ -135,8 +141,14 @@ def post_schedule():
     scheduled_time = request.form['scheduled_time']
     description = request.form['description']
     participant = request.form.getlist('participant')
-    author_id = '뭐하니'
 
+    # 브라우저의 쿠키에서 유저 토큰 가져오기.
+    token_receive = request.cookies.get("mytoken")
+
+    # 시크릿 키와 보안 알고리즘으로 전달 받은 토큰을 Decoding 한다.
+    payload = jwt.decode(token_receive, "Secret Key", algorithms = ["HS256"])
+    author_id = payload["id"]
+    
     if not title or not scheduled_time or not description:
         return jsonify({"message": " 모든 영역을 입력해 주세요 "}), 400
 
