@@ -1,10 +1,10 @@
-import Component from '../../core/component.js';
+import Component from '../core/component.js';
 
-import SideStore from '../../store/sideStore.js';
-import ContentStore from '../../store/contentStore.js';
-import DetailStore from '../../store/detailStore.js';
+import SideStore from '../store/sideStore.js';
+import ContentStore from '../store/contentStore.js';
+import DetailStore from '../store/detailStore.js';
 
-import { $ } from '../../utils/selector.js';
+import { $ } from '../utils/selector.js';
 
 class Write extends Component {
   setup() {
@@ -16,9 +16,10 @@ class Write extends Component {
 
   mounted() {
     if (!this.$state.id) return;
-    const data = DetailStore.getDetailPost();
-    $('#modal_write_title-id').value = data.title;
-    $('#modal_write_description-id').value = data.description;
+
+    // const data = DetailStore.getDetailPost();
+    // $('#modal_write_title-id').value = data.title;
+    // $('#modal_write_description-id').value = data.description;
   }
 
   template() {
@@ -51,9 +52,7 @@ class Write extends Component {
 
   setEvent() {
     this.addEvent('click', '.modal_write_cancel', () => {
-      this.$target.close();
       SideStore.setCurModal('');
-      this.destroy();
     });
 
     this.addEvent('click', '.modal_write_submit', () => {
@@ -67,9 +66,7 @@ class Write extends Component {
         description: descriptionInputValue,
       });
 
-      this.$target.close();
       SideStore.setCurModal('');
-      this.destroy();
     });
   }
 }

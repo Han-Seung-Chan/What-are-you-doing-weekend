@@ -1,6 +1,7 @@
 import Component from '../core/component.js';
 import HeaderStore from '../store/headerStore.js';
 import ContentStore from '../store/contentStore.js';
+import SideStore from '../store/sideStore.js';
 
 import { $ } from '../utils/selector.js';
 
@@ -43,6 +44,10 @@ class Header extends Component {
       const selectedValue = event.target.value;
       HeaderStore.setSortOrder(selectedValue);
       ContentStore.setSortContents(selectedValue);
+    });
+
+    this.addEvent('change', '.header_logo', () => {
+      SideStore.setCurModal('');
     });
   }
 }

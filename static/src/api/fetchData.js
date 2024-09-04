@@ -6,7 +6,6 @@ export const requestGET = async (url, data = {}) => {
       data: data,
       success(res) {
         if (res['result'] === 'success') {
-          console.log(res.schedules);
           resolve(res.schedules);
         } else {
           reject(new Error('Request failed with result: ' + res['result']));

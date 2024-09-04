@@ -3,25 +3,29 @@ import Store from '../core/store.js';
 import { requestGET } from '../api/fetchData.js';
 
 class DetailStore extends Store {
-  #detailPost = 'detailPost';
-  #selectPostId = 'selectPostId';
-  async init() {}
+  #detail = 'detailPost';
+  #selectId = 'selectId';
 
-  getSelectPostId() {
-    return this.getState(this.#selectPostId);
+  async init() {
+    this.setState(this.#detail, {});
   }
 
-  async setSelectPostId(id) {
-    this.setState(this.#selectPostId, id);
+  getSelectPostId() {
+    return this.getState(this.#selectId);
+  }
+  setSelectId(id) {
+    return this.setState(this.#selectId, id);
   }
 
   getDetailPost() {
-    return this.getState(this.#detailPost);
+    return this.getState(this.#detail);
   }
 
   async setDetailPost(id) {
-    const data = await requestGET(`/list?id=${id}`);
-    this.setDetailPost(this.#detailPost, data);
+    const data = await requestGET(`/view?post_id=${id}`);
+    console.log(data);
+
+    this.setState(this.#detail, data);
   }
 }
 
