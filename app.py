@@ -1,8 +1,7 @@
-from flask import Flask, jsonify, request, url_for, render_template
-from jinja2 import Template # SSR을 위한 Jinja2 라이브러리
+from flask import Flask, jsonify, request, render_template, make_response
 from pymongo import MongoClient # MongoDB 서버 연결
 from bson import ObjectId
-from bson.json_util import dumps
+# from bson.json_util import dumps
 from flask.json.provider import JSONProvider
 
 import bcrypt # pw 해싱용 라이브러리
@@ -17,10 +16,26 @@ import jwt # JWT 토큰 생성 및 검사
 
 app = Flask(__name__)
 
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
+class CustomJSONProvider(JSONProvider):
+    def dumps(self, obj, **kwargs):
+        return json.dumps(obj, **kwargs, cls=CustomJSONEncoder)
+
+    def loads(self, s, **kwargs):
+        return json.loads(s, **kwargs)
+
+app.json = CustomJSONProvider(app)
+
 client = MongoClient("localhost", 27017)
 
 db = client.logintest
-collection = db.users
+login_collection = db.users
+post_collection = db.posts
 
 # 홈페이지
 @app.route("/")
@@ -32,7 +47,7 @@ def home():
         # 시크릿 키와 보안 알고리즘으로 전달 받은 토큰을 Decoding 한다.
         payload = jwt.decode(token_receive, "Secret Key", algorithms = ["HS256"])
 
-        find_id = collection.find_one({"user_id" : payload["id"]})
+        find_id = login_collection.find_one({"user_id" : payload["id"]})
 
         # 정상적으로 토큰이 Decoding 되고, 유저 ID가 있다면 아래의 과정을 수행한다.
         #
@@ -60,7 +75,7 @@ def login():
     request_pw = request.form["user_pw"]
 
     # DB에서 요청된 ID 존재 여부 확인
-    find_data = collection.find_one({"user_id" : request_id})
+    find_data = login_collection.find_one({"user_id" : request_id})
 
     # DB에 해당 데이터가 존재하고, PW가 일치할 때 동작
     if find_data and bcrypt.checkpw(request_pw.encode(), find_data["user_pw"]):
@@ -77,7 +92,9 @@ def login():
 # log-out
 @app.route("/logout", methods = ["POST"])
 def logout():
-    print("임시")
+    res=make_response("")
+    res.set_cookie("mytoken", "", max_age=0)
+    return res
 
 # 회원가입 페이지 출력
 @app.route("/sign-up-page")
@@ -91,7 +108,7 @@ def id_check():
     user_id = request.args.get("user_id")
 
     # DB에서 요청된 ID 탐색
-    find_id = collection.find_one({"user_id": user_id})
+    find_id = login_collection.find_one({"user_id": user_id})
     if not find_id:
         return jsonify({"result": "success"})
     return jsonify({"result": "failure"})
@@ -109,29 +126,11 @@ def sign_up():
 
     # 정보를 DB에 저장
     doc = {"user_name": user_name, "user_id": user_id, "user_pw": user_pw}
-    collection.insert_one(doc)
+    login_collection.insert_one(doc)
     return jsonify({"result": "success"})
-
-class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
-
-class CustomJSONProvider(JSONProvider):
-    def dumps(self, obj, **kwargs):
-        return json.dumps(obj, **kwargs, cls=CustomJSONEncoder)
-
-    def loads(self, s, **kwargs):
-        return json.loads(s, **kwargs)
-
-app.json = CustomJSONProvider(app)
-
-
 
 @app.route('/api/write', methods=['POST'])
 def post_schedule():
-    print(request.form)
     title = request.form['title']
     scheduled_time = request.form['scheduled_time']
     description = request.form['description']
@@ -148,7 +147,7 @@ def post_schedule():
         return jsonify({"message": " 모든 영역을 입력해 주세요 "}), 400
 
     post_id = str(uuid.uuid4()) # uuid 를 활용한 post_id 만들기 
-    current_time = datetime.datetime.now() # 현재 시간 가공해서 시간
+    current_time = datetime.now() # 현재 시간 가공해서 시간
     write_time = current_time.strftime("%Y.%m.%d %H:%M")
     doc = {
         'post_id': post_id,
@@ -159,33 +158,16 @@ def post_schedule():
         'participant': participant,
         'author_id': author_id
     }
-    db.schedules.insert_one(doc)
+    post_collection.insert_one(doc)
     return jsonify({'result': 'success', 'post_id': post_id})
-
-# LIST
-@app.route('/list')
-def list_page():
-    directory = os.path.dirname(os.path.abspath(__file__))
-    template_path = os.path.join(directory, 'list.html')
-
-    with open(template_path, 'r', encoding='utf-8') as file:
-        template_content = file.read()
-
-    template = Template(template_content)
-    rendered_template = template.render(variable1="value1", variable2="value2")
-
-    return rendered_template
 
 # LIST 목록 
 @app.route('/api/lists', methods=['GET'])
 def schedule_list():
     try:
-        result = list(db.schedules.find({}, {'_id': 0})) # id 제외하고 반환
-        schedules = []
-        for schedule in result:
-            schedules.append(schedule)
-        print(schedules)
-        return jsonify({'result': 'success', 'schedules': schedules})
+        result = list(post_collection.find({}, {'_id': 0})) # id 제외하고 반환
+        print(result)
+        return jsonify({'result': 'success', 'schedules': result})
 
     except Exception as e:
         return jsonify({'result': 'error', 'message': str(e)}), 500
@@ -195,7 +177,7 @@ def schedule_list():
 def schedule_view():
     try:
         post_id = request.args.get('post_id')
-        result = db.schedules.find_one({'post_id': post_id}, {'_id': 0})
+        result = post_collection.find_one({'post_id': post_id}, {'_id': 0})
         
         return jsonify({'result': 'success', 'schedules': result})
     
@@ -205,7 +187,7 @@ def schedule_view():
 @app.route('/api/edit', methods=['POST'])
 def editMemo():
     post_id = request.form['post_id']
-    result = db.schedules.find_one({'post_id': post_id}, {'_id': 0})
+    result = post_collection.find_one({'post_id': post_id}, {'_id': 0})
     print(post_id)
     return jsonify({'result':'success', 'schedules': result})
 
