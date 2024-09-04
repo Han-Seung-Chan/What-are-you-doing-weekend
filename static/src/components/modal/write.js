@@ -66,11 +66,6 @@ class Write extends Component {
         scheduled_time: dateInputValue,
         description: descriptionInputValue,
       });
-      console.log({
-        title: titleInputValue,
-        scheduled_time: dateInputValue,
-        description: descriptionInputValue,
-      });
 
       this.$target.close();
       SideStore.setCurModal('');
