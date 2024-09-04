@@ -36,7 +36,7 @@ class Header extends Component {
   setEvent() {
     this.addEvent('click', '#searchButton', () => {
       const searchInputValue = $('#searchInput').value;
-      HeaderStore.setSearchWord(searchInputValue);
+      HeaderStore.setSortOrder(searchInputValue);
       ContentStore.setSearchContents(searchInputValue);
     });
 

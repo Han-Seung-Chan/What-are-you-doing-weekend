@@ -1,6 +1,7 @@
 import Store from '../core/store.js';
 
 import { listArr } from '../constants/mock/list.js';
+import { fetchContents } from '../api/fetchData.js';
 
 class ContentsDataStore extends Store {
   #contentsKey = 'contentsData';
@@ -24,14 +25,15 @@ class ContentsDataStore extends Store {
   }
 
   async setContents() {
+    const data = await fetchContents('list');
+    // data 추가해주면 끝
     this.setState(this.#contentsKey, listArr);
   }
 
   async setSearchContents(word) {
     if (word.length === 0) return;
-    const filterArr = listArr.filter((data) => {
-      return data.title.search(word) > 0 ?? data;
-    });
+    const data = await fetchContents(`list?search=${word}`);
+    // data 추가해주면 끝
     this.setState(this.#contentsKey, filterArr);
   }
 
@@ -39,7 +41,14 @@ class ContentsDataStore extends Store {
     const filterArr = listArr.filter((data) => {
       return data.post_id % 2 === 0 ?? data;
     });
+    const data = await fetchContents(`list?sort=${sortStandard}`);
+    // data 추가해주면 끝
     this.setState(this.#contentsKey, filterArr);
+  }
+
+  async postContent(bodyData) {
+    await fetchContents('write', 'POST', bodyData);
+    this.setContents();
   }
 
   setEmptyContents() {

@@ -1,6 +1,7 @@
 import Component from '../../core/component.js';
 
 import SideStore from '../../store/sideStore.js';
+import ContentStore from '../../store/contentStore.js';
 
 import { $ } from '../../utils/selector.js';
 
@@ -50,9 +51,11 @@ class Write extends Component {
       const dateInputValue = $('#modal_write_date-id').value;
       const descriptionInputValue = $('#modal_write_description-id').value;
 
-      console.log(titleInputValue);
-      console.log(dateInputValue);
-      console.log(descriptionInputValue);
+      ContentStore.postContent({
+        title: titleInputValue,
+        scheduled_time: dateInputValue,
+        description: descriptionInputValue,
+      });
 
       this.$target.close();
       SideStore.setCurModal('');
