@@ -3,6 +3,8 @@ import CommentStore from '../../store/commentStore.js';
 import DetailStore from '../../store/detailStore.js';
 import SideStore from '../../store/sideStore.js';
 import ContentStore from '../../store/contentStore.js';
+import ContentStore from '../../store/contentStore.js';
+import SideStore from '../../store/sideStore.js';
 
 class Detail extends Component {
   setup() {
