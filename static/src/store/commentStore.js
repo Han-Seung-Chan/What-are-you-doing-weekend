@@ -1,7 +1,6 @@
 import Store from '../core/store.js';
 
-import { listArr } from '../constants/mock/list.js';
-import { fetchContents } from '../api/fetchData.js';
+import { requestGET } from '../api/fetchData.js';
 
 class DetailStore extends Store {
   #comment = 'comment';

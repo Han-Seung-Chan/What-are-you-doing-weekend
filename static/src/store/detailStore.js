@@ -1,7 +1,6 @@
 import Store from '../core/store.js';
 
-import { listArr } from '../constants/mock/list.js';
-import { fetchContents } from '../api/fetchData.js';
+import { requestGET } from '../api/fetchData.js';
 
 class DetailStore extends Store {
   #detailPost = 'detailPost';
@@ -21,13 +20,8 @@ class DetailStore extends Store {
   }
 
   async setDetailPost(id) {
-    console.log(id);
-
-    return;
-
-    const data = await fetchContents(`list?id=${id}`);
-    // data 추가해주면 끝
-    this.setDetailPost(this.#detailPost, listArr[0]);
+    const data = await requestGET(`/list?id=${id}`);
+    this.setDetailPost(this.#detailPost, data);
   }
 }
 
