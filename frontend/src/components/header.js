@@ -1,8 +1,8 @@
-import Component from '/src/core/component.js';
-import HeaderStore from '/src/store/headerStore.js';
-import ContentStore from '/src/store/contentStore.js';
+import Component from '../core/component.js';
+import HeaderStore from '../store/headerStore.js';
+import ContentStore from '../store/contentStore.js';
 
-import { $ } from '/src/utils/selector.js';
+import { $ } from '../utils/selector.js';
 
 class Header extends Component {
   setup() {

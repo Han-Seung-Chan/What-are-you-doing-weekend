@@ -1,6 +1,6 @@
-import Store from '/src/core/store.js';
+import Store from '../core/store.js';
 
-import { listArr } from '/src/constants/mock/list.js';
+import { listArr } from '../constants/mock/list.js';
 
 class ContentsDataStore extends Store {
   #contentsKey = 'contentsData';
