@@ -22,31 +22,6 @@
     ></script>
 
     <script>
-      function show_schedule() {
-        $.ajax({
-          type: 'GET',
-          url: '/list',
-          data: {},
-          success: function (response) {
-            let schedules = response['schedules'];
-            make_schedule(schedules);
-          },
-        });
-      }
-
-      <!-- Schedule View 확인하기-->
-      function view_schedule() {
-        $.ajax({
-          type: 'GET',
-          url: '/view',
-          data: {},
-          success: function (response){
-            if(response['result'] == 'success') {
-              pass
-            }
-          }
-        })
-      }
 
       // <!-- schedule 작성하기 -->
       function post_schedule() {

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>크래프톤 정글 담벼락</title>
+
+    <!-- 부트스트랩 CSS 링크 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <!-- jQuery Library -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>  
+    <script>
+        // function show_list(){
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '/list',
+        //         data: {},
+        //         success: function(response) {
+        //             if(response['result'] == 'success') {
+        //                 alert(' 페이지 로딩 성공 ');
+        //             } else {
+        //                 alert(' 페이지 로딩 실패')
+        //             }
+        //         }
+        //     });
+        // }
+
+        $(document).ready(function () {
+            show_list();
+        });
+
+      function show_list() {
+        $('#card-list').empty();
+        $.ajax({
+          type: 'GET',
+          url: '/api/list',
+          data: {},
+          success: function (response) {
+            let schedules = response['schedules'];
+            makelist(schedules);
+          },
+        });
+      }
+
+      function makelist(schedules) {
+        for (let i = 0; i < schedules.length; i++) {
+          schedule = schedules[i];
+          post_id = schedule['post_id'];
+          title = schedule['title'];
+          scheduled_time = schedule['scheduled_time'];
+          author_id = schedule['author_id'];
+          write_time = schedule['write_time']
+
+          card_content_html = `
+                    <div class="card-body">
+                        <h1 class="content_title">${title}</h1>
+                        <h1 class="content_scheduled_time">${scheduled_time}</h1>
+                        <h1 class="content_author_id">${author_id}</h1>
+                        <h1 class="content_write_time">${write_time}<h1>
+                    `;
+
+          $('#card-list').append(`
+                    <button class="card" id=${post_id} onclick="list_alert('${post_id}')">
+                        ${card_content_html}
+                    </button>
+                    `);
+        }
+      }
+
+      function list_alert(post_id) {
+            // alert('Clicked card with ID: ' + post_id);
+            alert(post_id + ' 약속 ');
+        }
+
+</script>
+</head>
+<body>
+    <!-- 제목 -->
+    <div class="title">
+      <h1>주말 뭐하니?</h1>
+    </div>
+    <main class="content_wrapper">
+        <ul class="content_container">
+            <div id="card-list" class="card-columns"></div>
+
+            <!-- <li class="content_box" data-tab="1">
+              <h1 class="content_title">담주 일요일에 같이 점심 드실 분?</h1>
+              <p class="content_text_group">
+              <span>2024-09-03 11:40</span>
+              <span>author id</span>
+              <span>29시간 2분 전</span>
+              </p>
+              </li>
+            
+            <li class="content_box" data-tab="2">
+              <h1 class="content_title">담주 일요일에 같이 축구 하실 분?</h1>
+              <p class="content_text_group">
+              <span>2024-09-03 11:40</span>
+              <span>author id</span>
+              <span>29시간 2분 전</span>
+              </p>
+              </li>
+            
+            <li class="content_box" data-tab="3">
+              <h1 class="content_title">담주 일요일에 같이 드라이브 하실 분?</h1>
+              <p class="content_text_group">
+              <span>2024-09-03 11:40</span>
+              <span>author id</span>
+              <span>29시간 2분 전</span>
+              </p>
+              </li>
+            
+            <li class="content_box" data-tab="4">
+              <h1 class="content_title">담주 일요일에 같이 클라이밍 하실 분?</h1>
+              <p class="content_text_group">
+              <span>2024-09-03 11:40</span>
+              <span>author id</span>
+              <span>29시간 2분 전</span>
+              </p>
+              </li> -->
+        
+        </ul>
+    </main>
+
+    <!-- 부트스트랩 JS 링크 -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
