@@ -1,0 +1,85 @@
+.modal_post {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  position: relative;
+}
+
+.modal_close-button {
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 39px;
+  cursor: pointer;
+}
+
+.modal_post h1 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #333;
+  text-align: center;
+}
+
+.post_container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.post_box {
+  flex: 1 1 calc(33.33% - 20px);
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post_title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.post_text_group {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.post_text_group span {
+  display: inline-block;
+  padding: 2px;
+}
+
+.modal_alarm_button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.modal_alarm-ok {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.modal_alarm-ok:hover {
+  background-color: #0056b3;
+}

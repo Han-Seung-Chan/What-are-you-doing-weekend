@@ -1,0 +1,31 @@
+.content_container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px;
+  width: 80%;
+}
+
+.content_box {
+  border: 1px solid #000;
+  border-radius: 20px;
+  padding: 21px;
+  margin-bottom: 24px;
+  width: 45%;
+  cursor: pointer;
+}
+
+.content_title {
+  font-size: 26px;
+  margin-bottom: 16px;
+}
+
+.content_text_group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content_text_group span {
+  font-size: 20px;
+}
