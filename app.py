@@ -112,11 +112,6 @@ def sign_up():
     collection.insert_one(doc)
     return jsonify({"result": "success"})
 
-if __name__ == '__main__':
-    print(sys.executable)
-    app.run('0.0.0.0', port = 5000, debug = True)
-
-
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
@@ -214,4 +209,6 @@ def editMemo():
     print(post_id)
     return jsonify({'result':'success', 'schedules': result})
 
-app.run(port=5002, debug=True)
+if __name__ == '__main__':
+    print(sys.executable)
+    app.run('0.0.0.0', port = 5000, debug = True)

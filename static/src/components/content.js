@@ -10,7 +10,13 @@ class Contents extends Component {
     this.$state = {
       contentsData: ContentStore.getContents(),
     };
+    console.log(this.$state.contentsData);
+
     ContentStore.subscribe('contentsData', this);
+  }
+
+  mounted() {
+    console.log(ContentStore.getContents());
   }
 
   template() {
