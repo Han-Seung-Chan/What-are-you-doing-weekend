@@ -1,4 +1,5 @@
 const requestGET = async (url) => {
+  return;
   const res = await fetch(url);
 
   if (res.ok) {
@@ -10,6 +11,7 @@ const requestGET = async (url) => {
 };
 
 const requestPOST = async (url, body) => {
+  return;
   fetch(url, {
     method: 'POST',
     body: JSON.stringify({
