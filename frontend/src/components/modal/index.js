@@ -5,9 +5,11 @@ import Post from './post.js';
 import Write from './write.js';
 
 import SideStore from '../../store/sideStore.js';
+import DetailStore from '../../store/detailStore.js';
 
 class Modal extends Component {
   setup() {
+    DetailStore.init();
     this.$state = {
       curModal: SideStore.getCurModal(),
     };

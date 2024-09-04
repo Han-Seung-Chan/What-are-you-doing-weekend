@@ -8,7 +8,6 @@ class Header extends Component {
   setup() {
     this.$state = {
       curSortOrder: HeaderStore.getSortOrder(),
-      curSearchWord: HeaderStore.getSearchWord(),
     };
   }
 

@@ -2,13 +2,23 @@ import Component from '../../core/component.js';
 
 import SideStore from '../../store/sideStore.js';
 import ContentStore from '../../store/contentStore.js';
+import DetailStore from '../../store/detailStore.js';
 
 import { $ } from '../../utils/selector.js';
 
 class Write extends Component {
   setup() {
-    this.$state = {};
+    this.$state = {
+      id: DetailStore.getSelectPostId(),
+    };
     SideStore.subscribe('curModal', this);
+  }
+
+  mounted() {
+    if (!this.$state.id) return;
+    const data = DetailStore.getDetailPost();
+    $('#modal_write_title-id').value = data.title;
+    $('#modal_write_description-id').value = data.description;
   }
 
   template() {
