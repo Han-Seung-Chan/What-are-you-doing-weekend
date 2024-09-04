@@ -192,6 +192,33 @@ def editMemo():
     print(post_id)
     return jsonify({'result':'success', 'schedules': result})
 
+
+# 정렬
+@app.route('/api/lists', methods=['GET'])
+def schedule_list():
+    # 정렬 순서를 Parameter 로 받아오기
+    # [현재 진행 중]/ 약속 시간 순/ 작성 날짜 순/ 내가 작성한 글/ 내가 참여한 글 
+    # inProgress/ appointment/ createdDate/ wrotebyMe/ participated
+
+    sortMode = request.args.get('sortMode', 'inProgress')
+
+    if sortMode == 'inProgress': 
+        result = list(db.schedules.find().sort('inProgress', -1))
+    elif sortMode == 'appointment': 
+        result = list(db.schedules.find().sort('app_year', -1), ('app_month', -1), ('app_day', -1))
+    elif sortMode == 'createdDate': # 이건 동작 확인, 나머지는 못 함 
+        result = list(db.schedules.find().sort('write_time', -1))
+    else:
+        result = list(db.schedules.find({}, {'_id': 0},)) # id 제외하고 반환
+    
+    # result = list(db.schedules.find().sort('write_time', -1)) # 작성 날짜 순 정렬 
+    # result = list(db.schedules.find({}, {'_id': 0},)) # id 제외하고 반환
+    schedules = []
+    for schedule in result:
+        schedules.append(schedule)
+    print(schedules)
+    return jsonify({'result': 'success', 'schedules': schedules})
+
 if __name__ == '__main__':
     print(sys.executable)
     app.run('0.0.0.0', port = 5000, debug = True)
