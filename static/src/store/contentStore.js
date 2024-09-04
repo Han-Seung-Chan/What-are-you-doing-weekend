@@ -18,7 +18,6 @@ class ContentsDataStore extends Store {
     console.log(data);
 
     this.setState(this.#contentsKey, data);
-    console.log(data);
   }
 
   async setSearchContents(word) {
