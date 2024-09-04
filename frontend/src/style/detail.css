@@ -138,6 +138,7 @@
   gap: 6px;
 }
 
+.modal_detail-enter,
 .modal_detail-ok,
 .modal_detail-edit,
 .modal_detail-delete {
@@ -152,6 +153,7 @@
 }
 
 .modal_detail-ok:hover,
+.modal_detail-enter:hover,
 .modal_detail-edit:hover {
   background-color: #0056b3;
 }

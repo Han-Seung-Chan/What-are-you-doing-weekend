@@ -1,6 +1,7 @@
 import Component from '../../core/component.js';
 
 import ContentStore from '../../store/contentStore.js';
+import DetailStore from '../../store/detailStore.js';
 import SideStore from '../../store/sideStore.js';
 
 import { getTimeDifference } from '../../utils/getTimeDifference.js';
@@ -95,6 +96,7 @@ class Post extends Component {
   handleSidebarClick(e) {
     const li = e.target.closest('li');
     if (!li) return;
+    DetailStore.setDetailPost(li.dataset.tab);
     ContentStore.setSelectPostId(li.dataset.tab);
     SideStore.setCurModal('detail');
   }

@@ -1,5 +1,6 @@
 import Component from '../core/component.js';
 import ContentStore from '../store/contentStore.js';
+import DetailStore from '../store/detailStore.js';
 import SideStore from '../store/sideStore.js';
 
 import { getTimeDifference } from '../utils/getTimeDifference.js';
@@ -24,7 +25,6 @@ class Contents extends Component {
           <span>${scheduled_time}</span>
           <span>${author_id}</span>
           <span>${getTimeDifference(write_time)}</span>
-          </p>
           </li>
         `;
       })
@@ -40,7 +40,8 @@ class Contents extends Component {
   handleSidebarClick(e) {
     const li = e.target.closest('li');
     if (!li) return;
-    ContentStore.setSelectPostId(li.dataset.tab);
+    DetailStore.setDetailPost(li.dataset.tab);
+    DetailStore.setSelectPostId(li.dataset.tab);
     SideStore.setCurModal('detail');
   }
 }

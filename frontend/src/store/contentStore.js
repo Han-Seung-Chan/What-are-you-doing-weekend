@@ -5,19 +5,9 @@ import { fetchContents } from '../api/fetchData.js';
 
 class ContentsDataStore extends Store {
   #contentsKey = 'contentsData';
-  #selectPostId = 'selectPostId';
 
   async init() {
     await this.setContents();
-    this.setSelectPostId();
-  }
-
-  getSelectPostId() {
-    return this.getState(this.#selectPostId);
-  }
-
-  async setSelectPostId(id) {
-    this.setState(this.#selectPostId, id);
   }
 
   getContents() {
@@ -48,6 +38,16 @@ class ContentsDataStore extends Store {
 
   async postContent(bodyData) {
     await fetchContents('write', 'POST', bodyData);
+    this.setContents();
+  }
+
+  async deleteContent(id) {
+    await fetchContents('delete', 'POST', { id });
+    this.setContents();
+  }
+
+  async participate(id) {
+    await fetchContents('participate', 'POST', { id });
     this.setContents();
   }
 
