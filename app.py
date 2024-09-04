@@ -92,6 +92,7 @@ def login():
 # log-out
 @app.route("/logout", methods = ["POST"])
 def logout():
+    # test
     res=make_response("")
     res.set_cookie("mytoken", "", max_age=0)
     return res
