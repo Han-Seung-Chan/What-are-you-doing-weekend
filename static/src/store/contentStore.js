@@ -14,11 +14,11 @@ class ContentsDataStore extends Store {
   }
 
   async setContents() {
-    let data;
-    if (!data) data = [];
-    else data = await requestGET('/list');
+    const data = await requestGET('/lists');
+    console.log(data);
 
     this.setState(this.#contentsKey, data);
+    console.log(data);
   }
 
   async setSearchContents(word) {
@@ -34,17 +34,17 @@ class ContentsDataStore extends Store {
   }
 
   async postContent(bodyData) {
-    await requestPOST('/write', 'POST', bodyData);
+    await requestPOST('/write', bodyData);
     this.setContents();
   }
 
   async deleteContent(id) {
-    await requestPOST('/delete', 'POST', { id });
+    await requestPOST('/delete', { id });
     this.setContents();
   }
 
   async participate(id) {
-    await requestPOST('/participate', 'POST', { id });
+    await requestPOST('/participate', { id });
     this.setContents();
   }
 

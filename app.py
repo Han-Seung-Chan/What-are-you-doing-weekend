@@ -106,9 +106,7 @@ def sign_up():
     collection.insert_one(doc)
     return jsonify({"result": "success"})
 
-if __name__ == '__main__':
-    print(sys.executable)
-    app.run('0.0.0.0', port = 5000, debug = True)
+
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -126,8 +124,6 @@ class CustomJSONProvider(JSONProvider):
 
 app.json = CustomJSONProvider(app)
 
-
-
 @app.route('/api/write', methods=['POST'])
 def post_schedule():
     print(request.form)
@@ -141,10 +137,10 @@ def post_schedule():
         return jsonify({"message": " 모든 영역을 입력해 주세요 "}), 400
 
     post_id = str(uuid.uuid4()) # uuid 를 활용한 post_id 만들기 
-    current_time = datetime.datetime.now() # 현재 시간 가공해서 시간
+    current_time = datetime.now() # 현재 시간 가공해서 시간
     write_time = current_time.strftime("%Y.%m.%d %H:%M")
     doc = {
-        'post_id': post_id,
+        'post_id': post_id, 
         'title': title,
         'scheduled_time': scheduled_time,
         'description': description,
@@ -154,20 +150,6 @@ def post_schedule():
     }
     db.schedules.insert_one(doc)
     return jsonify({'result': 'success', 'post_id': post_id})
-
-# LIST
-@app.route('/list')
-def list_page():
-    directory = os.path.dirname(os.path.abspath(__file__))
-    template_path = os.path.join(directory, 'list.html')
-
-    with open(template_path, 'r', encoding='utf-8') as file:
-        template_content = file.read()
-
-    template = Template(template_content)
-    rendered_template = template.render(variable1="value1", variable2="value2")
-
-    return rendered_template
 
 # LIST 목록 
 @app.route('/api/lists', methods=['GET'])
@@ -202,4 +184,7 @@ def editMemo():
     print(post_id)
     return jsonify({'result':'success', 'schedules': result})
 
-app.run(port=5002, debug=True)
+# init
+if __name__ == '__main__':
+    print(sys.executable)
+    app.run('0.0.0.0', port = 5000, debug = True)

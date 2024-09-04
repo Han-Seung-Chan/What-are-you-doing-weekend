@@ -14,6 +14,7 @@ class AlarmStore extends Store {
   }
 
   async setAlarm() {
+    return;
     const data = await requestGET('/alarm');
     this.setState(this.#alarm, data);
   }
