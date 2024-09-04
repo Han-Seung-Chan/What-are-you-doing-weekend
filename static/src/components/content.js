@@ -16,9 +16,13 @@ class Contents extends Component {
   template() {
     return `
     <ul class="content_container">
-    ${this.$state.contentsData
-      .map(({ post_id, title, scheduled_time, write_time, author_id }) => {
-        return `
+    ${
+      this.$state.contentsData.length === 0
+        ? ''
+        : this.$state.contentsData
+            .map(
+              ({ post_id, title, scheduled_time, write_time, author_id }) => {
+                return `
         <li class="content_box" data-tab="${post_id}">
           <h1 class="content_title">${title}</h1>
           <p class="content_text_group">
@@ -27,8 +31,10 @@ class Contents extends Component {
           <span>${getTimeDifference(write_time)}</span>
           </li>
         `;
-      })
-      .join('')}
+              },
+            )
+            .join('')
+    }
     </ul>
 `;
   }
