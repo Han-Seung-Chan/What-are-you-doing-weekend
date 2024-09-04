@@ -4,6 +4,7 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 79%;
 }
 
 .modal_close-button-detail {
@@ -139,6 +140,7 @@
 }
 
 .modal_detail-enter,
+.modal_detail-cancel,
 .modal_detail-ok,
 .modal_detail-edit,
 .modal_detail-delete {
@@ -158,10 +160,16 @@
   background-color: #0056b3;
 }
 
-.modal_detail-delete {
+.modal_detail-delete,
+.modal_detail-cancel {
   background-color: #f00a0a;
 }
 
-.modal_detail-delete:hover {
+.modal_detail-delete:hover,
+.modal_detail-cancel:hover {
   background-color: #d82121;
+}
+
+.none {
+  display: none;
 }

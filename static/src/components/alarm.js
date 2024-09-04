@@ -1,8 +1,8 @@
-import Component from '../../core/component.js';
-import AlarmStore from '../../store/alarmStore.js';
-import SideStore from '../../store/sideStore.js';
+import Component from '../core/component.js';
+import AlarmStore from '../store/alarmStore.js';
+import SideStore from '../store/sideStore.js';
 
-import { getTimeDifference } from '../../utils/getTimeDifference.js';
+import { getTimeDifference } from '../utils/getTimeDifference.js';
 
 class Alarm extends Component {
   setup() {
@@ -36,15 +36,11 @@ class Alarm extends Component {
 
   setEvent() {
     this.addEvent('click', '.modal_close-button-alarm', () => {
-      this.$target.close();
       SideStore.setCurModal('');
-      this.destroy();
     });
 
     this.addEvent('click', '.modal_alarm-ok', () => {
-      this.$target.close();
       SideStore.setCurModal('');
-      this.destroy();
     });
   }
 }

@@ -1,6 +1,7 @@
 import Store from '../core/store.js';
 
 import { requestGET, requestPOST } from '../api/fetchData.js';
+import DetailStore from './detailStore.js';
 
 class ContentsDataStore extends Store {
   #contentsKey = 'contentsData';
@@ -15,8 +16,7 @@ class ContentsDataStore extends Store {
 
   async setContents() {
     const data = await requestGET('/lists');
-    console.log(data);
-
+    // DetailStore.setDetailPost(data[0].post_id);
     this.setState(this.#contentsKey, data);
   }
 
@@ -28,7 +28,6 @@ class ContentsDataStore extends Store {
 
   async setSortContents(order) {
     const data = await requestGET(`/list?sort=${sortStandard}`);
-    // data 추가해주면 끝
     this.setState(this.#contentsKey, data);
   }
 

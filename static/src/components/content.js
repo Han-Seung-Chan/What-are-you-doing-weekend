@@ -10,13 +10,7 @@ class Contents extends Component {
     this.$state = {
       contentsData: ContentStore.getContents(),
     };
-    console.log(this.$state.contentsData);
-
     ContentStore.subscribe('contentsData', this);
-  }
-
-  mounted() {
-    console.log(ContentStore.getContents());
   }
 
   template() {
@@ -49,11 +43,11 @@ class Contents extends Component {
     this.addEvent('click', 'ul', (event) => this.handleSidebarClick(event));
   }
 
-  handleSidebarClick(e) {
+  async handleSidebarClick(e) {
     const li = e.target.closest('li');
     if (!li) return;
-    DetailStore.setDetailPost(li.dataset.tab);
-    DetailStore.setSelectPostId(li.dataset.tab);
+    await DetailStore.setDetailPost(li.dataset.tab);
+    DetailStore.setSelectId(li.dataset.tab);
     SideStore.setCurModal('detail');
   }
 }

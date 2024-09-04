@@ -6,7 +6,7 @@ class AlarmStore extends Store {
   #alarm = 'alarm';
 
   async init() {
-    await this.setAlarm();
+    this.setState(this.#alarm, []);
   }
 
   getAlarm() {

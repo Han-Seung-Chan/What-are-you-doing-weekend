@@ -30,7 +30,6 @@ class Component {
 
   addEvent(eventType, selector, callback, useCapture = false) {
     const children = [...this.$target.querySelectorAll(selector)];
-
     const isTarget = (target) =>
       children.includes(target) || target.closest(selector);
     this.$target.addEventListener(
