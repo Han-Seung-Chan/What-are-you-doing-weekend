@@ -24,9 +24,9 @@ class Header extends Component {
         </div>
         <div>
           <select name="sortOrder" id="header_sort">
-            <option value="progressAppoint">진행중인 약속</option>
-            <option value="closeAppoint">가까운 약속</option>
-            <option value="completeAppoint">완료된 약속</option>
+            <option value="inProgress">진행중인 약속</option>
+            <option value="appointment">약속 시간순</option>
+            <option value="createdDate">작성 날짜순</option>
           </select>
         </div>
     </div>

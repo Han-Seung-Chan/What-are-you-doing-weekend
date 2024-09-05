@@ -6,7 +6,7 @@ export const requestGET = async (url, data = {}) => {
       data: data,
       success(res) {
         if (res['result'] === 'success') {
-          resolve(res.schedules);
+          resolve(res.data);
         } else {
           reject(new Error('Request failed with result: ' + res['result']));
         }
@@ -26,7 +26,7 @@ export const requestPOST = async (url, data = {}) => {
       data: data,
       success(res) {
         if (res['result'] === 'success') {
-          resolve(res.schedules);
+          resolve(res.data);
         } else {
           reject(new Error('Request failed with result: ' + res['result']));
         }

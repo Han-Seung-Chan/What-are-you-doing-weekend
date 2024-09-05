@@ -10,23 +10,31 @@ class Detail extends Component {
   async setup() {
     this.$state = {
       selectId: DetailStore.getSelectPostId(),
-      data: DetailStore.getDetailPost(),
+      detailPost: DetailStore.getDetailPost(),
+      comment: CommentStore.getComment(),
+      review: CommentStore.getReview(),
     };
     DetailStore.subscribe('detailPost', this);
+    CommentStore.subscribe('comment', this);
+    CommentStore.subscribe('review', this);
   }
 
   template() {
+    console.log(this.$state.detailPost);
+    console.log(this.$state.comment);
+    console.log(this.$state.review);
+
     const {
-      author_id,
       description,
       participant,
       post_id,
       scheduled_time,
       title,
+      author_id,
       write_time,
-    } = this.$state.data;
-
-    const isAuthor = false;
+      isParti,
+      isWriter,
+    } = this.$state.detailPost;
 
     return `
   <div class="modal_detail">
@@ -59,14 +67,21 @@ class Detail extends Component {
     </div>
     <div class='modal_detail_button-group'>
       ${
-        isAuthor
+        isWriter
           ? `
             <button class='modal_detail-delete'>삭제</button>
             <button class='modal_detail-edit'>수정</button>
         `
           : `
-          <button class='modal_detail-cancel'>취소하기</button>
+          ${
+            isParti
+              ? `
+            <button class='modal_detail-cancel'>취소하기</button>
+          `
+              : `
           <button class='modal_detail-enter'>참여하기</button>
+          `
+          }
           `
       }
     </div>
@@ -81,8 +96,17 @@ class Detail extends Component {
           <div class="comment_section">
             <h2>댓글</h2>
             <ul class="comment_list">
-              <li class="comment_item">유저1: 재미있겠네요!</li>
-              <li class="comment_item">유저2: 저도 참여하고 싶습니다!</li>
+            ${
+              this.$state.comment === 0
+                ? ''
+                : this.$state.comment
+                    .map(({ author_id, reviewDesc }) => {
+                      return `
+                <li class="comment_item">${author_id} : ${reviewDesc}</li>
+                `;
+                    })
+                    .join('')
+            }
             </ul>
           </div>
             <div class="comment_input">
@@ -93,8 +117,13 @@ class Detail extends Component {
             <div class="review_section none">
             <h2>리뷰</h2>
             <ul class="review_list">
-              <li class="review_item">리뷰1: 모임이 유익했습니다!</li>
-              <li class="review_item">리뷰2: 다시 참여하고 싶어요!</li>
+              ${this.$state.review
+                .map(({ user, comment }) => {
+                  return `
+                      <li class="review_item">${user} : ${comment}</li>
+                        `;
+                })
+                .join('')}
             </ul>
           </div>
           <div class="review_input none">
@@ -110,27 +139,39 @@ class Detail extends Component {
   }
 
   setEvent() {
-    this.addEvent('click', '.modal_close-button-detail', () => {
-      SideStore.setCurModal('');
-    });
-
-    this.addEvent('click', '.modal_detail-ok', () => {
-      SideStore.setCurModal('');
-    });
-
     this.addEvent('click', '.modal_detail-delete', () => {
-      ContentStore.deleteContent(this.$state.selectId);
+      DetailStore.deleteContent(this.$state.selectId);
       SideStore.setCurModal('');
     });
 
     this.addEvent('click', '.modal_detail-edit', () => {
-      ContentStore.deleteContent(this.$state.selectId);
-      SideStore.setCurModal('');
+      DetailStore.setSelectId(this.$state.selectId);
+      SideStore.setCurModal('write');
     });
 
-    this.addEvent('click', '.modal_detail-enter', () => {
-      ContentStore.participate(this.$state.selectId);
-      SideStore.setCurModal('');
+    this.addEvent('click', '.modal_detail-enter', async () => {
+      await DetailStore.participate(this.$state.selectId).then(() => {
+        alert('참여완료');
+      });
+    });
+
+    this.addEvent('click', '.modal_detail-cancel', async () => {
+      await DetailStore.participateCancel(this.$state.selectId).then(() => {
+        alert('취소완료');
+      });
+    });
+
+    this.addEvent('click', '.comment_submit_button', async (event) => {
+      const reviewDesc = $('.comment_input_field').value;
+      const post_id = this.$state.detailPost.post_id;
+      console.log(reviewDesc);
+      console.log(post_id);
+
+      await CommentStore.postComment({ post_id, reviewDesc });
+    });
+
+    this.addEvent('click', '.review_submit_button', () => {
+      const inputValue = $('.review_input_field').value;
     });
 
     this.addEvent('click', '.toggle_button-comment', () => {
@@ -168,11 +209,12 @@ class Detail extends Component {
       commentInput.classList.add('none');
     });
 
-    this.addEvent('click', '.comment_submit_button', () => {
-      댓글작성;
+    this.addEvent('click', '.modal_close-button-detail', () => {
+      SideStore.setCurModal('');
     });
-    this.addEvent('click', '.review_submit_button', () => {
-      댓글작성;
+
+    this.addEvent('click', '.modal_detail-ok', () => {
+      SideStore.setCurModal('');
     });
   }
 }

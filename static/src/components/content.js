@@ -1,5 +1,6 @@
 import Component from '../core/component.js';
 import ContentStore from '../store/contentStore.js';
+import CommentStore from '../store/commentStore.js';
 import DetailStore from '../store/detailStore.js';
 import SideStore from '../store/sideStore.js';
 
@@ -14,6 +15,8 @@ class Contents extends Component {
   }
 
   template() {
+    console.log(this.$state.contentsData);
+    if (this.$state.contentsData.length === 0) return '';
     return `
     <ul class="content_container">
     ${
@@ -47,6 +50,8 @@ class Contents extends Component {
     const li = e.target.closest('li');
     if (!li) return;
     await DetailStore.setDetailPost(li.dataset.tab);
+    await CommentStore.setComment(li.dataset.tab);
+
     DetailStore.setSelectId(li.dataset.tab);
     SideStore.setCurModal('detail');
   }

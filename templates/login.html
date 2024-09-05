@@ -111,7 +111,7 @@
                 data: { user_id, user_pw },
                 success(response) {
                     if (response["result"] === "success") {
-                        $.cookie("mytoken", response["token"], { path: "/" })
+                        $.cookie("mytoken", response["data"], { path: "/" })
                         window.location.replace("/")
                     } else {
                         alert("로그인 실패")

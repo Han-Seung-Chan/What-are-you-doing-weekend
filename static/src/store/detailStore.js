@@ -1,6 +1,6 @@
 import Store from '../core/store.js';
 
-import { requestGET } from '../api/fetchData.js';
+import { requestGET, requestPOST } from '../api/fetchData.js';
 
 class DetailStore extends Store {
   #detail = 'detailPost';
@@ -13,6 +13,7 @@ class DetailStore extends Store {
   getSelectPostId() {
     return this.getState(this.#selectId);
   }
+
   setSelectId(id) {
     return this.setState(this.#selectId, id);
   }
@@ -26,6 +27,20 @@ class DetailStore extends Store {
     console.log(data);
 
     this.setState(this.#detail, data);
+  }
+
+  async deleteContent(id) {
+    await requestPOST('/delete', { id });
+  }
+
+  async participate(post_id) {
+    await requestPOST('/parti', { post_id });
+    await this.setDetailPost(post_id);
+  }
+
+  async participateCancel(post_id) {
+    await requestPOST('/parti-cancel', { post_id });
+    await this.setDetailPost(post_id);
   }
 }
 
