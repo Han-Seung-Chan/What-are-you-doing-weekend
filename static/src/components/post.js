@@ -62,6 +62,7 @@ class Post extends Component {
     DetailStore.setSelectId(li.dataset.tab);
     await DetailStore.setDetailPost(li.dataset.tab);
     await CommentStore.setComment(li.dataset.tab);
+    await CommentStore.setReview(li.dataset.tab);
 
     SideStore.setCurModal('detail');
   }

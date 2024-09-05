@@ -15,7 +15,6 @@ class Contents extends Component {
   }
 
   template() {
-    console.log(this.$state.contentsData);
     if (this.$state.contentsData.length === 0) return '';
     return `
     <ul class="content_container">
@@ -26,20 +25,19 @@ class Contents extends Component {
             .map(
               ({ post_id, title, scheduled_time, write_time, author_id }) => {
                 return `
-        <li class="content_box" data-tab="${post_id}">
-          <h1 class="content_title">${title}</h1>
-          <p class="content_text_group">
-          <span>${scheduled_time}</span>
-          <span>${author_id}</span>
-          <span>${getTimeDifference(write_time)}</span>
-          </li>
-        `;
+                <li class="post_box" data-tab="${post_id}">
+                  <h2 class="post_title">${title}</h2>
+                  <p class="post_text_group">
+                  <span>${scheduled_time}</span>
+                  <span>${author_id}</span>
+                  <span>${getTimeDifference(write_time)}</span>
+                  </p>
+                  </li>`;
               },
             )
             .join('')
     }
-    </ul>
-`;
+    </ul>`;
   }
 
   setEvent() {
@@ -51,6 +49,7 @@ class Contents extends Component {
     if (!li) return;
     await DetailStore.setDetailPost(li.dataset.tab);
     await CommentStore.setComment(li.dataset.tab);
+    await CommentStore.setReview(li.dataset.tab);
 
     DetailStore.setSelectId(li.dataset.tab);
     SideStore.setCurModal('detail');

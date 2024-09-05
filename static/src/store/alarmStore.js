@@ -4,21 +4,23 @@ import { requestGET } from '../api/fetchData.js';
 
 class AlarmStore extends Store {
   #alarm = 'alarm';
+  #alarmLength = 'alarmLength';
+  #intervalId = 'intervalId';
 
   async init() {
-    this.setState(this.#alarm, []);
-
-    setInterval(() => {
-      setAlarm();
-    }, 10000);
+    await this.setAlarm();
+    this.#intervalId = setInterval(async () => {
+      await this.setAlarm();
+    }, 100000);
   }
+
+  getIntervalId() {}
 
   getAlarm() {
     return this.getState(this.#alarm);
   }
 
   async setAlarm() {
-    return;
     const data = await requestGET('/alarm');
     this.setState(this.#alarm, data);
   }

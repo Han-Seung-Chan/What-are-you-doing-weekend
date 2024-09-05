@@ -1,6 +1,7 @@
 import Store from '../core/store.js';
 
 import { requestGET, requestPOST } from '../api/fetchData.js';
+import ContentStore from './contentStore.js';
 
 class DetailStore extends Store {
   #detail = 'detailPost';
@@ -24,13 +25,24 @@ class DetailStore extends Store {
 
   async setDetailPost(id) {
     const data = await requestGET(`/view?post_id=${id}`);
-    console.log(data);
 
     this.setState(this.#detail, data);
   }
 
   async deleteContent(id) {
-    await requestPOST('/delete', { id });
+    $.ajax({
+      type: 'DELETE',
+      url: `/delete`,
+      data: { post_id: id },
+      success(res) {
+        if (res['result'] === 'success') {
+          ContentStore.setContents();
+        }
+      },
+      error(err) {
+        console.log(err);
+      },
+    });
   }
 
   async participate(post_id) {

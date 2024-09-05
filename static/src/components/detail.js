@@ -19,11 +19,19 @@ class Detail extends Component {
     CommentStore.subscribe('review', this);
   }
 
-  template() {
-    console.log(this.$state.detailPost);
-    console.log(this.$state.comment);
-    console.log(this.$state.review);
+  mounted() {
+    console.log($('.review_submit_button'));
+    if (!$('.review_submit_button')) return;
+    if (!this.$state.detailPost.isOver) {
+      $('.review_submit_button').setAttribute('disabled', true);
+      $('.review_input_field').setAttribute('disabled', true);
+    } else {
+      $('.comment_submit_button').setAttribute('disabled', true);
+      $('.comment_input_field').setAttribute('disabled', true);
+    }
+  }
 
+  template() {
     const {
       description,
       participant,
@@ -34,6 +42,7 @@ class Detail extends Component {
       write_time,
       isParti,
       isWriter,
+      isOver,
     } = this.$state.detailPost;
 
     return `
@@ -57,20 +66,12 @@ class Detail extends Component {
       <label class="modal_detail-label">작성자 :</label>
       <span class="modal_detail-value">${author_id}</span>
     </div>
-    <div class="modal_detail-row">
-      <label class="modal_detail-label">참여 인원 :</label>
-      <span class="modal_detail-value">${participant.length}명</span>
-    </div>
-        <div class="modal_detail-row">
-        <label class="modal_detail-label"></label>
-      <span class="modal_detail-value">${getTimeDifference(write_time)}</span>
-    </div>
+
     <div class='modal_detail_button-group'>
       ${
         isWriter
           ? `
             <button class='modal_detail-delete'>삭제</button>
-            <button class='modal_detail-edit'>수정</button>
         `
           : `
           ${
@@ -86,8 +87,6 @@ class Detail extends Component {
       }
     </div>
     </div>
-  
-
         <div class="toggle_buttons">
           <button class="toggle_button toggle_button-comment active">댓글</button>
           <button class="toggle_button toggle_button-review">리뷰</button>
@@ -100,9 +99,9 @@ class Detail extends Component {
               this.$state.comment === 0
                 ? ''
                 : this.$state.comment
-                    .map(({ author_id, reviewDesc }) => {
+                    .map(({ author_id, commentDesc }) => {
                       return `
-                <li class="comment_item">${author_id} : ${reviewDesc}</li>
+                <li class="comment_item">${author_id} : ${commentDesc}</li>
                 `;
                     })
                     .join('')
@@ -110,7 +109,7 @@ class Detail extends Component {
             </ul>
           </div>
             <div class="comment_input">
-          <input type="text" placeholder="댓글을 입력하세요..." class="comment_input_field" />
+          <input type="text" placeholder="댓글을 입력하세요..." class="comment_input_field"  />
           <button class="comment_submit_button">등록</button>
         </div>
 
@@ -118,9 +117,9 @@ class Detail extends Component {
             <h2>리뷰</h2>
             <ul class="review_list">
               ${this.$state.review
-                .map(({ user, comment }) => {
+                .map(({ author_id, reviewDesc }) => {
                   return `
-                      <li class="review_item">${user} : ${comment}</li>
+                      <li class="review_item">${author_id} : ${reviewDesc}</li>
                         `;
                 })
                 .join('')}
@@ -130,18 +129,17 @@ class Detail extends Component {
             <input type="text" placeholder="리뷰을 입력하세요..." class="review_input_field" />
             <button class="review_submit_button">등록</button>
           </div>
-
-        <div class="modal_detail_button-group">
-          <button class="modal_detail-ok">확인</button>
-        </div>
       </div>
+      
     `;
   }
 
   setEvent() {
     this.addEvent('click', '.modal_detail-delete', () => {
-      DetailStore.deleteContent(this.$state.selectId);
-      SideStore.setCurModal('');
+      DetailStore.deleteContent(this.$state.selectId).then(() => {
+        alert('삭제완료');
+        SideStore.setCurModal('');
+      });
     });
 
     this.addEvent('click', '.modal_detail-edit', () => {
@@ -161,17 +159,16 @@ class Detail extends Component {
       });
     });
 
-    this.addEvent('click', '.comment_submit_button', async (event) => {
-      const reviewDesc = $('.comment_input_field').value;
+    this.addEvent('click', '.comment_submit_button', async () => {
+      const commentDesc = $('.comment_input_field').value;
       const post_id = this.$state.detailPost.post_id;
-      console.log(reviewDesc);
-      console.log(post_id);
-
-      await CommentStore.postComment({ post_id, reviewDesc });
+      await CommentStore.postComment({ post_id, commentDesc });
     });
 
-    this.addEvent('click', '.review_submit_button', () => {
-      const inputValue = $('.review_input_field').value;
+    this.addEvent('click', '.review_submit_button', async () => {
+      const reviewDesc = $('.review_input_field').value;
+      const post_id = this.$state.detailPost.post_id;
+      await CommentStore.postReview({ post_id, reviewDesc });
     });
 
     this.addEvent('click', '.toggle_button-comment', () => {
@@ -210,10 +207,6 @@ class Detail extends Component {
     });
 
     this.addEvent('click', '.modal_close-button-detail', () => {
-      SideStore.setCurModal('');
-    });
-
-    this.addEvent('click', '.modal_detail-ok', () => {
       SideStore.setCurModal('');
     });
   }
