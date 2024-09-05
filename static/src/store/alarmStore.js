@@ -7,6 +7,10 @@ class AlarmStore extends Store {
 
   async init() {
     this.setState(this.#alarm, []);
+
+    setInterval(() => {
+      setAlarm();
+    }, 10000);
   }
 
   getAlarm() {

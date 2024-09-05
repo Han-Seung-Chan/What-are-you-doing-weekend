@@ -127,7 +127,7 @@ def sign_up():
     user_pw = bcrypt.hashpw(password=user_pw, salt=bcrypt.gensalt())
 
     # 정보를 DB에 저장
-    doc = {"user_name": user_name, "user_id": user_id, "user_pw": user_pw, "user_parti" : [], "user_write": []}
+    doc = {"user_name": user_name, "user_id": user_id, "user_pw": user_pw, "user_parti" : [], "user_write": [], "alarm": []}
     login_collection.insert_one(doc)
     return jsonify({"result": "success"})
 
@@ -203,44 +203,6 @@ def schedule_view():
     except Exception as e:
         return jsonify({'result': 'error', 'data': str(e)}), 500
     
-# 참여하기 버튼
-@app.route("/api/parti", methods=["POST"])
-def participate():
-    post_id = request.form["post_id"]
-
-    # 브라우저의 쿠키에서 유저 토큰 가져오기.
-    token_receive = request.cookies.get("mytoken")
-    # 시크릿 키와 보안 알고리즘으로 전달 받은 토큰을 Decoding 한다.
-    payload = jwt.decode(token_receive, "Secret Key", algorithms = ["HS256"])
-    user_id = payload["id"]
-
-    find_user = login_collection.find_one({"user_id":user_id})
-
-    user_parti_list = list(find_user["user_parti"])
-    user_parti_list.append(post_id)
-    login_collection.update_one({"user_id" : user_id}, {"$set":{"user_parti": user_parti_list}})
-
-    return jsonify({'result': 'success', 'data': post_id})
-
-# 참여하기 취소 버튼
-@app.route("/api/parti-cancel", methods=["POST"])
-def participate_cancel():
-    post_id = request.form["post_id"]
-
-    # 브라우저의 쿠키에서 유저 토큰 가져오기.
-    token_receive = request.cookies.get("mytoken")
-    # 시크릿 키와 보안 알고리즘으로 전달 받은 토큰을 Decoding 한다.
-    payload = jwt.decode(token_receive, "Secret Key", algorithms = ["HS256"])
-    user_id = payload["id"]
-
-    find_user = login_collection.find_one({"user_id":user_id})
-
-    user_parti_list = list(find_user["user_parti"])
-    user_parti_list.remove(post_id)
-    login_collection.update_one({"user_id" : user_id}, {"$set":{"user_parti": user_parti_list}})
-
-    return jsonify({'result': 'success', 'data': post_id})
-
 @app.route('/api/edit', methods=['POST'])
 def editPost():
     post_id = request.form['post_id']
@@ -255,11 +217,7 @@ def editPost():
                                         'description': description,
                                         'participant': participant,}})
     print(post_id)
-    return jsonify({'result':'success'})
-
-@app.route("/api/delete", methods=["POST"])
-def deletePost():
-
+    return jsonify({'result':'success', 'data': result})
 
 # LIST 기능 
 # 정렬 순서를 Parameter 로 받아오기
@@ -325,8 +283,8 @@ def list_comment():
         print(f"Error querying database: {e}")  # Debug print
         return jsonify({'result': 'error', 'data': '서버 오류입니다.'}), 500
 
-    if not result:
-        return jsonify({'result': 'error', 'data': '댓글을 찾을 수 없습니다.'}), 404
+    # if not result:
+        # return jsonify({'result': 'error', 'data': '댓글을 찾을 수 없습니다.'}), 404
 
     comments = [comment for comment in result]
 
@@ -375,8 +333,8 @@ def list_review():
         print(f"Error querying database: {e}")  # Debug print
         return jsonify({'result': 'error', 'data': '서버 오류입니다.'}), 500
 
-    if not result:
-        return jsonify({'result': 'error', 'data': '댓글을 찾을 수 없습니다.'}), 404
+    # if not result:
+        # return jsonify({'result': 'error', 'data': '댓글을 찾을 수 없습니다.'}), 404
 
     reviews = [review for review in result]
 
@@ -427,7 +385,9 @@ def participate():
     author_id = author_find["author_id"]
     author_data_find = login_collection.find_one({"user_id" : author_id})
     title = author_find["title"]
-    author_alarm_list = list(author_data_find["alarm"]).append({"title": title, "isJoin" : 1, "user_id": user_id})
+    author_alarm_list = author_data_find["alarm"]
+    print(author_alarm_list)
+    author_alarm_list.append({"title": title, "isJoin" : 1, "user_id": user_id})
     login_collection.update_one({"user_id":author_id},{"$set": {"alarm" : author_alarm_list}})
 
     find_user = login_collection.find_one({"user_id":user_id})
@@ -454,6 +414,7 @@ def participate_cancel():
     author_find = post_collection.find_one({"post_id": post_id})
     author_id = author_find["author_id"]
     author_data_find = login_collection.find_one({"user_id" : author_id})
+    print(author_data_find)
     title = author_find["title"]
     author_alarm_list = list(author_data_find["alarm"]).append({"title": title, "isJoin" : 0, "user_id": user_id})
     login_collection.update_one({"user_id":author_id},{"$set": {"alarm" : author_alarm_list}})

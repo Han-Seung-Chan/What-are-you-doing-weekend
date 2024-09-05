@@ -16,34 +16,33 @@ class ContentsDataStore extends Store {
 
   async setContents() {
     const data = await requestGET('/lists');
-    // DetailStore.setDetailPost(data[0].post_id);
+
     this.setState(this.#contentsKey, data);
   }
 
   async setSearchContents(word) {
     if (word.length === 0) return;
-    const data = await requestGET(`/list?search=${word}`);
-    this.setState(this.#contentsKey, data);
+    const arr = this.getContents();
+
+    const resultArray = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].title.includes(word)) {
+        resultArray.push(arr[i]);
+      }
+    }
+
+    this.setState(this.#contentsKey, resultArray);
   }
 
   async setSortContents(order) {
-    const data = await requestGET(`/list?sort=${sortStandard}`);
+    const data = await requestGET('/lists', { sortMode: order });
     this.setState(this.#contentsKey, data);
   }
 
   async postContent(bodyData) {
-    await requestPOST('/write', bodyData);
-    this.setContents();
-  }
-
-  async deleteContent(id) {
-    await requestPOST('/delete', { id });
-    this.setContents();
-  }
-
-  async participate(id) {
-    await requestPOST('/participate', { id });
-    this.setContents();
+    const prev = this.getContents();
+    const data = await requestPOST('/write', bodyData);
+    this.setState(this.#contentsKey, [...prev, data]);
   }
 
   setEmptyContents() {
