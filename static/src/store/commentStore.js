@@ -1,8 +1,9 @@
 import Store from '../core/store.js';
 
 import { requestGET } from '../api/fetchData.js';
+import { requestPOST } from '../api/fetchData.js';
 
-class DetailStore extends Store {
+class CommentStore extends Store {
   #comment = 'comment';
   #review = 'review';
 
@@ -14,17 +15,28 @@ class DetailStore extends Store {
   getComment() {
     return this.getState(this.#comment);
   }
+
   async setComment(id) {
-    this.setState(this.#comment, []);
+    const res = await requestGET(`/list/reviews?post_id=${id}`);
+    this.setState(this.#comment, res);
+  }
+
+  async postComment(data) {
+    const prev = this.getComment();
+    const res = await requestPOST('/write/reviews', data);
+
+    this.setState(this.#comment, [...prev, res]);
   }
 
   getReview() {
     return this.getState(this.#review);
   }
 
-  async setReview(id) {
+  async setReview(post_id) {
+    const res = await requestPOST('/write/reviews', { post_id });
+    console.log(res);
     this.setState(this.#review, []);
   }
 }
 
-export default new DetailStore();
+export default new CommentStore();

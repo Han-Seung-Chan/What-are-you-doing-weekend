@@ -3,6 +3,7 @@ import Component from '../core/component.js';
 import ContentStore from '../store/contentStore.js';
 import DetailStore from '../store/detailStore.js';
 import SideStore from '../store/sideStore.js';
+import CommentStore from '../store/commentStore.js';
 
 import { getTimeDifference } from '../utils/getTimeDifference.js';
 
@@ -14,8 +15,7 @@ class Join extends Component {
   }
 
   template() {
-    return;
-    `<div class="modal_post">
+    return `<div class="modal_post">
             <button class="modal_close-button">x</button>
             <h1>내가 참여한 게시글</h1>
             <ul class="post_container">
@@ -61,11 +61,12 @@ class Join extends Component {
     this.addEvent('click', 'ul', (event) => this.handleSidebarClick(event));
   }
 
-  handleSidebarClick(e) {
+  async handleSidebarClick(e) {
     const li = e.target.closest('li');
     if (!li) return;
     DetailStore.setSelectId(li.dataset.tab);
-    DetailStore.setDetailPost(li.dataset.tab);
+    await CommentStore.setComment(li.dataset.tab);
+    await DetailStore.setDetailPost(li.dataset.tab);
     SideStore.setCurModal('detail');
   }
 }
