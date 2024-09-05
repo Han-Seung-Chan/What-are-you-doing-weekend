@@ -39,7 +39,7 @@ class Header extends Component {
     else {
       $.ajax({
         type: 'POST',
-        url: '/api$/logout',
+        url: '/api/logout',
         data: {},
         success() {
           window.location.reload();

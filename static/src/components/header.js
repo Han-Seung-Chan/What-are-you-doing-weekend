@@ -16,7 +16,7 @@ class Header extends Component {
     return `
     <div class="header_container">
         <h1>
-          <a class="header_logo" href="">주말 뭐하지?</a>
+          <a class="header_logo" href="">주말에 뭐하니?</a>
         </h1>
         <div>
           <input type="text" id="searchInput" placeholder="검색어를 입력하세요" />

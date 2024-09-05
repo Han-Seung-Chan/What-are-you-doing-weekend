@@ -196,17 +196,37 @@ def schedule_view():
                 isParti = True
         print(isWriter)
         print(isParti)
+
+        scheduled_time = result["scheduled_time"].split("-")
+        scheduled_time = int("".join(scheduled_time))
+        current_time = datetime.now()
+        open_time_str = current_time.strftime("%Y%m%d")
+        open_time = int(open_time_str)
+
+        isOver = 0
+        if open_time > scheduled_time:
+            isOver = 1
+
         result["isWriter"] = isWriter
         result["isParti"] = isParti
+        result["isOver"] = isOver
         return jsonify({'result': 'success', 'data': result})
     
     except Exception as e:
         return jsonify({'result': 'error', 'data': str(e)}), 500
-    
 @app.route('/api/edit', methods=['POST'])
-def editMemo():
+def editPost():
     post_id = request.form['post_id']
-    result = post_collection.find_one({'post_id': post_id}, {'_id': 0})
+    title = request.form['title']
+    scheduled_time = request.form['scheduled_time']
+    description = request.form['description']
+    participant = request.form.getlist('participant')
+
+    post_collection.update_one({'post_id': post_id},
+                               {'$set': {'title': title,
+                                        'scheduled_time': scheduled_time,
+                                        'description': description,
+                                        'participant': participant,}})
     print(post_id)
     return jsonify({'result':'success', 'data': result})
 
@@ -432,6 +452,16 @@ def alarm():
 
     return jsonify({"result" : "success", "data": alarm_list})
 
+# DELETE 
+@app.route('/delete', methods=['DELETE'])
+def deleteMemo():
+    post_id = request.form['post_id']
+    result = post_collection.delete_one({'post_id': post_id})
+
+    if result.deleted_count == 1:
+        return jsonify({'result': 'success', 'deleted': post_id})
+    else:
+        return jsonify({'result': 'failure', 'deleted': post_id})
 
 if __name__ == '__main__':
     print(sys.executable)

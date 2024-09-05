@@ -2,8 +2,6 @@ import Component from '../core/component.js';
 import AlarmStore from '../store/alarmStore.js';
 import SideStore from '../store/sideStore.js';
 
-import { getTimeDifference } from '../utils/getTimeDifference.js';
-
 class Alarm extends Component {
   setup() {
     this.$state = {
@@ -17,11 +15,13 @@ class Alarm extends Component {
         <button class="modal_close-button-alarm">x</button>
         <h1>알림</h1>
         ${this.$state.alarmData
-          .map(({ title, time }) => {
+          .map(({ title, user_id, isJoin }) => {
+            const myJoin = isJoin === 1 ? true : false;
             return `
             <div class="alert_message">
-              <p >${title}</p>
-              <span>${getTimeDifference(time)}</span>
+              <p>나의 ${title} 약속에 ${user_id}님이 ${
+              isJoin === 1 ? '참가' : '참가 취소'
+            }했습니다.</p>
             </div>
 
             `;
